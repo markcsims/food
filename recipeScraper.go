@@ -1,12 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"golang.org/x/net/html"
 	"net/http"
 )
 
-func recipeScraper(url string) {
+func recipeScraper(url string, recipeChannel chan<- Recipe) {
 	resp, err := http.Get(url)
 
 	if err != nil {
@@ -24,7 +23,7 @@ func recipeScraper(url string) {
 	getIngredients(&recipe, doc)
 	getMethod(&recipe, doc)
 
-	fmt.Printf("%s", recipe)
+	recipeChannel <- recipe
 }
 
 func getMethod(r *Recipe, doc *html.Node) {
@@ -69,7 +68,6 @@ func getIngredients(r *Recipe, doc *html.Node) {
 						}
 					}
 					r.ingredients = append(r.ingredients, ingredient)
-					fmt.Print("\n")
 					break
 				}
 			}
