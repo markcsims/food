@@ -21,16 +21,25 @@ type StatsD interface {
 
 // StatsDConfig provides configuration for metrics recording
 type StatsDConfig struct {
-	IsProduction bool
-	Log          logger
+	isProduction bool
+	log          logger
 	host         string
 	port         string
 }
 
+func NewStatsDConfig(isProduction bool, log logger) StatsDConfig {
+	return StatsDConfig{
+		isProduction: isProduction,
+		log:          log,
+		host:         os.Getenv("STATSD_HOST"),
+		port:         os.Getenv("STATSD_PORT"),
+	}
+}
+
 // NewStatsD provides a new StatsD metrics recorder
 func NewStatsD(config StatsDConfig) (StatsD, error) {
-	if config.IsProduction == false {
-		return &dummyStatsD{config.Log}, nil
+	if config.isProduction == false || config.port == "" || config.host == "" {
+		return &dummyStatsD{config.log}, nil
 	}
 	return newMMStatsD(config)
 }
@@ -39,10 +48,8 @@ func newMMStatsD(config StatsDConfig) (*mmStatsD, error) {
 	if config.port == "" || config.host == "" {
 		return nil, errors.New("You bastard")
 	}
-	host := getStatsDHost(config)
-	port := getStatsDPort(config)
 
-	sd, err := statsd.New(host + ":" + port)
+	sd, err := statsd.New(config.host + ":" + config.port)
 
 	if err != nil {
 		return nil, err
@@ -107,24 +114,4 @@ func (dsd dummyStatsD) Incr(name string, tags ...string) error {
 	logString := fmt.Sprintf(dummyFmtString, "Increment", name, 0.0, tags)
 	dsd.Info(logString)
 	return nil
-}
-
-func getStatsDHost(config StatsDConfig) string {
-	if len(config.host) > 0 {
-		return config.host
-	}
-	if host := os.Getenv("STATSD_HOST"); len(host) > 0 {
-		return host
-	}
-	return ""
-}
-
-func getStatsDPort(config StatsDConfig) string {
-	if len(config.port) > 0 {
-		return config.port
-	}
-	if port := os.Getenv("STATSD_PORT"); len(port) > 0 {
-		return port
-	}
-	return ""
 }

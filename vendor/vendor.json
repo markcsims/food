@@ -3,6 +3,12 @@
 	"ignore": "test",
 	"package": [
 		{
+			"checksumSHA1": "CMcHvqld6XBCDYA+9jCy6gT1O0Q=",
+			"path": "github.com/DataDog/datadog-go/statsd",
+			"revision": "909c02b65dd8a52e8fa6072db9752a112227cf21",
+			"revisionTime": "2016-08-22T16:14:30Z"
+		},
+		{
 			"checksumSHA1": "2avCvSn0XonfApKKuTMyiQmk7s0=",
 			"origin": "github.com/markcsims/bbcfood/tools/vendor/github.com/Sirupsen/logrus",
 			"path": "github.com/Sirupsen/logrus",
@@ -14,6 +20,16 @@
 			"path": "github.com/kelseyhightower/envconfig",
 			"revision": "13674b2d056fb658a00ba3f36e78043ced07c924",
 			"revisionTime": "2016-09-21T17:42:30Z"
+		},
+		{
+			"checksumSHA1": "xDl4TjBfSzWteNAbqsyMSTzxX1s=",
+			"path": "github.com/mergermarket/gotools",
+			"revision": "f667be83be2e2b75d01998f94e9c2c349edee41b",
+			"revisionTime": "2016-11-01T15:02:02Z"
+		},
+		{
+			"path": "github/mergermarket/gotools",
+			"revision": ""
 		},
 		{
 			"checksumSHA1": "vqc3a+oTUGX8PmD0TS+qQ7gmN8I=",

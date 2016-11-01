@@ -44,7 +44,6 @@ func getMethod(r *Recipe, doc *html.Node) {
 					}
 					step++
 					r.method = append(r.method, Method{step: step, description: method})
-					fmt.Print("\n")
 					break
 				}
 			}

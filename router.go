@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/markcsims/bbcfood/tools"
+	"github.com/mergermarket/gotools"
 )
 
 // Hello greets a given name
@@ -27,11 +27,11 @@ func (hr *HelloHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, Hello(r.URL.Query().Get("name")))
 }
 
-func newRouter(config *appConfig, log logger, statsd tools.StatsD) http.Handler {
+func newRouter(config *appConfig, log logger) http.Handler {
 	router := http.NewServeMux()
 	logConfigHandler := tools.NewInternalLogConfig(config, log)
 	router.HandleFunc("/internal/healthcheck", tools.InternalHealthCheck)
 	router.HandleFunc("/internal/log-config", logConfigHandler)
 	router.Handle("/hello", &HelloHandler{log})
-	return tools.WrapWithTelemetry("/", router, log, statsd)
+	return router
 }
