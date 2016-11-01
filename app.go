@@ -25,6 +25,8 @@ func main() {
 		logger.Error("Error connecting to StatsD - defaulting to logging stats: ", err.Error())
 	}
 
+	recipeScraper("http://www.bbc.co.uk/food/recipes/rackoflambwithsmoked_90893")
+
 	logger.Info("Listening on", config.Port)
 	err = http.ListenAndServe(fmt.Sprintf(":%d", config.Port), newRouter(config, logger, statsd))
 

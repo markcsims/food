@@ -8,6 +8,6 @@ WORKDIR /go/src/github.com/markcsims/bbcfood
 
 ADD . /go/src/github.com/markcsims/bbcfood
 
-CMD ./build-app.sh && goMakeIt
+CMD ./build-app.sh && bbcfood
 
 EXPOSE 8080
