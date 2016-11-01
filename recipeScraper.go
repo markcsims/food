@@ -6,6 +6,16 @@ import (
 )
 
 func recipeScraper(url string, recipeChannel chan<- Recipe) {
+	doc := fetchPage(url)
+	recipe := Recipe{uri: url}
+
+	getIngredients(&recipe, doc)
+	getMethod(&recipe, doc)
+
+	recipeChannel <- recipe
+}
+
+func fetchPage(url string) *html.Node {
 	resp, err := http.Get(url)
 
 	if err != nil {
@@ -18,31 +28,33 @@ func recipeScraper(url string, recipeChannel chan<- Recipe) {
 	if err != nil {
 		panic(err)
 	}
-	recipe := Recipe{uri: url}
-
-	getIngredients(&recipe, doc)
-	getMethod(&recipe, doc)
-
-	recipeChannel <- recipe
+	return doc
 }
 
 func getMethod(r *Recipe, doc *html.Node) {
+	action := func(val *html.Node, step int) {
+		method := getValue(val)
+		r.method = append(r.method, Method{step: step, description: method})
+	}
+	findAttr(doc, "recipeInstructions", action)
+}
+func getIngredients(r *Recipe, doc *html.Node) {
+	action := func(val *html.Node, step int) {
+		ingredient := getValue(val)
+		r.ingredients = append(r.ingredients, ingredient)
+	}
+	findAttr(doc, "ingredients", action)
+}
+
+func findAttr(doc *html.Node, name string, action func(doc *html.Node, step int)) {
 	var f func(*html.Node)
-	step := 0
+	i := 0
 	f = func(n *html.Node) {
 		if n.Type == html.ElementNode && n.Data == "li" {
 			for _, a := range n.Attr {
-				if a.Key == "itemprop" && a.Val == "recipeInstructions" {
-					var method string
-					for c := n.FirstChild; c != nil; c = c.NextSibling {
-						if c.Type == html.ElementNode {
-							method += c.FirstChild.Data
-						} else {
-							method += c.Data
-						}
-					}
-					step++
-					r.method = append(r.method, Method{step: step, description: method})
+				if a.Key == "itemprop" && a.Val == name {
+					i++
+					action(n, i)
 					break
 				}
 			}
@@ -53,30 +65,17 @@ func getMethod(r *Recipe, doc *html.Node) {
 	}
 	f(doc)
 }
-func getIngredients(r *Recipe, doc *html.Node) {
-	var f func(*html.Node)
-	f = func(n *html.Node) {
-		if n.Type == html.ElementNode && n.Data == "li" {
-			for _, a := range n.Attr {
-				if a.Key == "itemprop" && a.Val == "ingredients" {
-					var ingredient string
-					for c := n.FirstChild; c != nil; c = c.NextSibling {
-						if c.Type == html.ElementNode {
-							ingredient += c.FirstChild.Data
-						} else {
-							ingredient += c.Data
-						}
-					}
-					r.ingredients = append(r.ingredients, ingredient)
-					break
-				}
-			}
-		}
-		for c := n.FirstChild; c != nil; c = c.NextSibling {
-			f(c)
+
+func getValue(n *html.Node) string {
+	var value string
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		if c.Type == html.ElementNode {
+			value += c.FirstChild.Data
+		} else {
+			value += c.Data
 		}
 	}
-	f(doc)
+	return value
 }
 
 type Recipe struct {
