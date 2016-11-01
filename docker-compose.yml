@@ -1,0 +1,10 @@
+web:
+  build: .
+  environment:
+    - PORT=8080
+    - LOG_LEVEL=debug
+    - ENV=local
+  volumes:
+    - .:/go/src/github.com/markcsims/bbcfood
+  ports:
+    - "8080:8080"

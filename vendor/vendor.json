@@ -1,0 +1,26 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "2avCvSn0XonfApKKuTMyiQmk7s0=",
+			"origin": "github.com/markcsims/bbcfood/tools/vendor/github.com/Sirupsen/logrus",
+			"path": "github.com/Sirupsen/logrus",
+			"revision": "26f7cca1f44b4cd24bc680d1cdafac374c3063f4",
+			"revisionTime": "2016-10-09T19:58:20Z"
+		},
+		{
+			"checksumSHA1": "h4g74tgdQOndlNYFFhY9vCxmThU=",
+			"path": "github.com/kelseyhightower/envconfig",
+			"revision": "13674b2d056fb658a00ba3f36e78043ced07c924",
+			"revisionTime": "2016-09-21T17:42:30Z"
+		},
+		{
+			"checksumSHA1": "8fD/im5Kwvy3JgmxulDTambmE8w=",
+			"path": "golang.org/x/sys/unix",
+			"revision": "a646d33e2ee3172a661fc09bca23bb4889a41bc8",
+			"revisionTime": "2016-07-15T05:43:45Z"
+		}
+	],
+	"rootPath": "github.com/markcsims/bbcfood"
+}
