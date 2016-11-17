@@ -18,7 +18,7 @@ func main() {
 
 	logger := tools.NewLogger(config.IsLocal())
 	logger.Info(fmt.Sprintf("Application config - %+v", config))
-	recipeSearchScraper("apple_pie")
+	//recipeSearchScraper("apple_pie")
 
 	logger.Info("Listening on", config.Port)
 	err = http.ListenAndServe(fmt.Sprintf(":%d", config.Port), newRouter(config, logger))

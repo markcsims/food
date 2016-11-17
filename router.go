@@ -27,11 +27,21 @@ func (hr *HelloHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, Hello(r.URL.Query().Get("name")))
 }
 
+type SearchHandler struct {
+	log logger
+}
+
+func (hr *SearchHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	hr.log.Info("search SearchHandler!")
+	fmt.Fprint(w, recipeSearchScraper("something"))
+}
+
 func newRouter(config *appConfig, log logger) http.Handler {
 	router := http.NewServeMux()
 	logConfigHandler := tools.NewInternalLogConfig(config, log)
 	router.HandleFunc("/internal/healthcheck", tools.InternalHealthCheck)
 	router.HandleFunc("/internal/log-config", logConfigHandler)
 	router.Handle("/hello", &HelloHandler{log})
+	router.Handle("/search", &SearchHandler{log})
 	return router
 }
