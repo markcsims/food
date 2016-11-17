@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/mergermarket/gotools"
+	"strings"
 )
 
 // Hello greets a given name
@@ -33,7 +34,13 @@ type SearchHandler struct {
 
 func (hr *SearchHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	hr.log.Info("search SearchHandler!")
-	fmt.Fprint(w, recipeSearchScraper("something"))
+	searchTerm := r.URL.Query().Get("keywords")
+	searchTerm = strings.Join(strings.Split(searchTerm, " "), "+")
+	if searchTerm == "" {
+		fmt.Fprint(w, "Please enter a search term with keywords query string")
+	} else {
+		fmt.Fprint(w, recipeSearchScraper(searchTerm))
+	}
 }
 
 func newRouter(config *appConfig, log logger) http.Handler {
